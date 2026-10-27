@@ -1,6 +1,6 @@
 
 import { useState } from 'react'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal, X } from 'lucide-react'
 import Card from '../components/Card'
 import { carros } from '../data/carros'
 
@@ -9,19 +9,43 @@ const categorias = ['Todos', ...new Set(carros.map((carro) => carro.categoria))]
 export default function Carros() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todos')
   const [termoBusca, setTermoBusca] = useState('')
+  const [ordenacao, setOrdenacao] = useState('padrao')
 
-  const carrosFiltrados = carros.filter((carro) => {
-    const correspondeCategoria =
-      categoriaSelecionada === 'Todos' ||
-      carro.categoria === categoriaSelecionada
+  const limparFiltros = () => {
+    setTermoBusca('')
+    setCategoriaSelecionada('Todos')
+    setOrdenacao('padrao')
+  }
 
-    const nomeCarro = `${carro.marca} ${carro.modelo}`.toLowerCase()
-    const correspondeBusca = nomeCarro.includes(
-      termoBusca.trim().toLowerCase(),
-    )
+  const filtrosAtivos =
+    termoBusca.trim() !== '' ||
+    categoriaSelecionada !== 'Todos' ||
+    ordenacao !== 'padrao'
 
-    return correspondeCategoria && correspondeBusca
-  })
+  const carrosFiltrados = carros
+    .filter((carro) => {
+      const correspondeCategoria =
+        categoriaSelecionada === 'Todos' ||
+        carro.categoria === categoriaSelecionada
+
+      const nomeCarro = `${carro.marca} ${carro.modelo}`.toLowerCase()
+      const correspondeBusca = nomeCarro.includes(
+        termoBusca.trim().toLowerCase(),
+      )
+
+      return correspondeCategoria && correspondeBusca
+    })
+    .sort((a, b) => {
+      if (ordenacao === 'menor-preco') {
+        return a.preco - b.preco
+      }
+
+      if (ordenacao === 'maior-preco') {
+        return b.preco - a.preco
+      }
+
+      return 0
+    })
 
   return (
     <main className="min-h-screen bg-zinc-950 px-5 py-16 lg:px-8">
@@ -88,7 +112,27 @@ export default function Carros() {
           </div>
         </div>
 
-        <div className="mt-8 flex items-center justify-between">
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <label
+            htmlFor="ordenacao-carros"
+            className="text-sm text-zinc-400"
+          >
+            Ordenar veículos
+          </label>
+
+          <select
+            id="ordenacao-carros"
+            value={ordenacao}
+            onChange={(evento) => setOrdenacao(evento.target.value)}
+            className="rounded-xl border border-white/15 bg-zinc-900 px-4 py-3 text-sm text-white outline-none transition focus:border-amber-400"
+          >
+            <option value="padrao">Ordem padrão</option>
+            <option value="menor-preco">Menor preço</option>
+            <option value="maior-preco">Maior preço</option>
+          </select>
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
           <p className="text-sm text-zinc-400">
             {carrosFiltrados.length}{' '}
             {carrosFiltrados.length === 1
@@ -96,9 +140,22 @@ export default function Carros() {
               : 'veículos encontrados'}
           </p>
 
-          <p className="text-xs text-zinc-500">
-            Valores demonstrativos por diária
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-zinc-500">
+              Valores demonstrativos por diária
+            </p>
+
+            {filtrosAtivos && (
+              <button
+                type="button"
+                onClick={limparFiltros}
+                className="inline-flex items-center gap-1 text-sm text-amber-400 transition hover:text-amber-300"
+              >
+                <X size={15} />
+                Limpar filtros
+              </button>
+            )}
+          </div>
         </div>
 
         {carrosFiltrados.length > 0 ? (
@@ -115,10 +172,7 @@ export default function Carros() {
 
             <button
               type="button"
-              onClick={() => {
-                setTermoBusca('')
-                setCategoriaSelecionada('Todos')
-              }}
+              onClick={limparFiltros}
               className="rounded-full border border-amber-400 px-5 py-2 text-sm text-amber-400 transition hover:bg-amber-400 hover:text-zinc-950"
             >
               Limpar busca e filtros
