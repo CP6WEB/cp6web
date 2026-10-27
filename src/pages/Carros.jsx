@@ -11,18 +11,30 @@ export default function Carros() {
   const [termoBusca, setTermoBusca] = useState('')
   const [ordenacao, setOrdenacao] = useState('padrao')
 
-  const carrosFiltrados = carros.filter((carro) => {
-    const correspondeCategoria =
-      categoriaSelecionada === 'Todos' ||
-      carro.categoria === categoriaSelecionada
+  const carrosFiltrados = carros
+    .filter((carro) => {
+      const correspondeCategoria =
+        categoriaSelecionada === 'Todos' ||
+        carro.categoria === categoriaSelecionada
 
-    const nomeCarro = `${carro.marca} ${carro.modelo}`.toLowerCase()
-    const correspondeBusca = nomeCarro.includes(
-      termoBusca.trim().toLowerCase(),
-    )
+      const nomeCarro = `${carro.marca} ${carro.modelo}`.toLowerCase()
+      const correspondeBusca = nomeCarro.includes(
+        termoBusca.trim().toLowerCase(),
+      )
 
-    return correspondeCategoria && correspondeBusca
-  })
+      return correspondeCategoria && correspondeBusca
+    })
+    .sort((a, b) => {
+      if (ordenacao === 'menor-preco') {
+        return a.preco - b.preco
+      }
+
+      if (ordenacao === 'maior-preco') {
+        return b.preco - a.preco
+      }
+
+      return 0
+    })
 
   return (
     <main className="min-h-screen bg-zinc-950 px-5 py-16 lg:px-8">
