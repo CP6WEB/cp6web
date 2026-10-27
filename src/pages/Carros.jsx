@@ -1,5 +1,6 @@
+
 import { useState } from 'react'
-import { SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal } from 'lucide-react'
 import Card from '../components/Card'
 import { carros } from '../data/carros'
 
@@ -7,11 +8,20 @@ const categorias = ['Todos', ...new Set(carros.map((carro) => carro.categoria))]
 
 export default function Carros() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todos')
+  const [termoBusca, setTermoBusca] = useState('')
 
-  const carrosFiltrados =
-    categoriaSelecionada === 'Todos'
-      ? carros
-      : carros.filter((carro) => carro.categoria === categoriaSelecionada)
+  const carrosFiltrados = carros.filter((carro) => {
+    const correspondeCategoria =
+      categoriaSelecionada === 'Todos' ||
+      carro.categoria === categoriaSelecionada
+
+    const nomeCarro = `${carro.marca} ${carro.modelo}`.toLowerCase()
+    const correspondeBusca = nomeCarro.includes(
+      termoBusca.trim().toLowerCase(),
+    )
+
+    return correspondeCategoria && correspondeBusca
+  })
 
   return (
     <main className="min-h-screen bg-zinc-950 px-5 py-16 lg:px-8">
@@ -56,10 +66,34 @@ export default function Carros() {
           </div>
         </div>
 
+        <div className="mt-6">
+          <label
+            htmlFor="busca-carros"
+            className="mb-2 block text-sm text-zinc-400"
+          >
+            Buscar por marca ou modelo
+          </label>
+
+          <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-zinc-900 px-4 transition focus-within:border-amber-400">
+            <Search size={18} className="shrink-0 text-amber-400" />
+
+            <input
+              id="busca-carros"
+              type="search"
+              value={termoBusca}
+              onChange={(evento) => setTermoBusca(evento.target.value)}
+              placeholder="Ex.: Porsche, BMW, Ferrari..."
+              className="w-full bg-transparent py-3 text-sm text-white outline-none placeholder:text-zinc-500"
+            />
+          </div>
+        </div>
+
         <div className="mt-8 flex items-center justify-between">
           <p className="text-sm text-zinc-400">
             {carrosFiltrados.length}{' '}
-            {carrosFiltrados.length === 1 ? 'veículo encontrado' : 'veículos encontrados'}
+            {carrosFiltrados.length === 1
+              ? 'veículo encontrado'
+              : 'veículos encontrados'}
           </p>
 
           <p className="text-xs text-zinc-500">
@@ -74,9 +108,22 @@ export default function Carros() {
             ))}
           </div>
         ) : (
-          <p className="mt-12 text-center text-zinc-400">
-            Nenhum veículo encontrado nesta categoria.
-          </p>
+          <div className="mt-12 flex flex-col items-center gap-4 text-center">
+            <p className="text-zinc-400">
+              Nenhum veículo corresponde à sua busca ou aos filtros selecionados.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => {
+                setTermoBusca('')
+                setCategoriaSelecionada('Todos')
+              }}
+              className="rounded-full border border-amber-400 px-5 py-2 text-sm text-amber-400 transition hover:bg-amber-400 hover:text-zinc-950"
+            >
+              Limpar busca e filtros
+            </button>
+          </div>
         )}
       </div>
     </main>
