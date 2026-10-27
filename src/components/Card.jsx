@@ -2,7 +2,7 @@
 import { ArrowUpRight, Gauge, Users } from 'lucide-react'
 import { formatarPreco } from '../data/carros'
 
-export default function Card({ carro }) {
+export default function Card({ carro, onDemonstrarInteresse }) {
   return (
     <article className="group overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 transition duration-300 hover:-translate-y-1 hover:border-amber-400/40">
       <div className="relative h-56 overflow-hidden bg-zinc-800">
@@ -53,13 +53,15 @@ export default function Card({ carro }) {
             </p>
           </div>
 
-          <a
-            href="mailto:contato@prestigemotors.example?subject=Consulta%20sobre%20loca%C3%A7%C3%A3o"
+          <button
+            type="button"
+            onClick={() => onDemonstrarInteresse(carro)}
             className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-amber-400 hover:bg-amber-400 hover:text-zinc-950"
-            aria-label={`Consultar ${carro.marca} ${carro.modelo}`}
+            aria-label={`Demonstrar interesse em ${carro.marca} ${carro.modelo}`}
+            title="Tenho interesse neste veículo"
           >
             <ArrowUpRight size={20} />
-          </a>
+          </button>
         </div>
       </div>
     </article>
