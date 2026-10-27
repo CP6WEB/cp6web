@@ -9,6 +9,7 @@ const categorias = ['Todos', ...new Set(carros.map((carro) => carro.categoria))]
 export default function Carros() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todos')
   const [termoBusca, setTermoBusca] = useState('')
+  const [ordenacao, setOrdenacao] = useState('padrao')
 
   const carrosFiltrados = carros.filter((carro) => {
     const correspondeCategoria =
@@ -88,6 +89,26 @@ export default function Carros() {
           </div>
         </div>
 
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <label
+            htmlFor="ordenacao-carros"
+            className="text-sm text-zinc-400"
+          >
+            Ordenar veículos
+          </label>
+
+          <select
+            id="ordenacao-carros"
+            value={ordenacao}
+            onChange={(evento) => setOrdenacao(evento.target.value)}
+            className="rounded-xl border border-white/15 bg-zinc-900 px-4 py-3 text-sm text-white outline-none transition focus:border-amber-400"
+          >
+            <option value="padrao">Ordem padrão</option>
+            <option value="menor-preco">Menor preço</option>
+            <option value="maior-preco">Maior preço</option>
+          </select>
+        </div>
+
         <div className="mt-8 flex items-center justify-between">
           <p className="text-sm text-zinc-400">
             {carrosFiltrados.length}{' '}
@@ -118,6 +139,7 @@ export default function Carros() {
               onClick={() => {
                 setTermoBusca('')
                 setCategoriaSelecionada('Todos')
+                setOrdenacao('padrao')
               }}
               className="rounded-full border border-amber-400 px-5 py-2 text-sm text-amber-400 transition hover:bg-amber-400 hover:text-zinc-950"
             >
