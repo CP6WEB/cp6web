@@ -1,6 +1,6 @@
 
 import { useState } from 'react'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal, X } from 'lucide-react'
 import Card from '../components/Card'
 import { carros } from '../data/carros'
 
@@ -10,6 +10,17 @@ export default function Carros() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todos')
   const [termoBusca, setTermoBusca] = useState('')
   const [ordenacao, setOrdenacao] = useState('padrao')
+
+  const limparFiltros = () => {
+    setTermoBusca('')
+    setCategoriaSelecionada('Todos')
+    setOrdenacao('padrao')
+  }
+
+  const filtrosAtivos =
+    termoBusca.trim() !== '' ||
+    categoriaSelecionada !== 'Todos' ||
+    ordenacao !== 'padrao'
 
   const carrosFiltrados = carros
     .filter((carro) => {
@@ -121,7 +132,7 @@ export default function Carros() {
           </select>
         </div>
 
-        <div className="mt-8 flex items-center justify-between">
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
           <p className="text-sm text-zinc-400">
             {carrosFiltrados.length}{' '}
             {carrosFiltrados.length === 1
@@ -129,9 +140,22 @@ export default function Carros() {
               : 'veículos encontrados'}
           </p>
 
-          <p className="text-xs text-zinc-500">
-            Valores demonstrativos por diária
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-zinc-500">
+              Valores demonstrativos por diária
+            </p>
+
+            {filtrosAtivos && (
+              <button
+                type="button"
+                onClick={limparFiltros}
+                className="inline-flex items-center gap-1 text-sm text-amber-400 transition hover:text-amber-300"
+              >
+                <X size={15} />
+                Limpar filtros
+              </button>
+            )}
+          </div>
         </div>
 
         {carrosFiltrados.length > 0 ? (
@@ -148,11 +172,7 @@ export default function Carros() {
 
             <button
               type="button"
-              onClick={() => {
-                setTermoBusca('')
-                setCategoriaSelecionada('Todos')
-                setOrdenacao('padrao')
-              }}
+              onClick={limparFiltros}
               className="rounded-full border border-amber-400 px-5 py-2 text-sm text-amber-400 transition hover:bg-amber-400 hover:text-zinc-950"
             >
               Limpar busca e filtros
