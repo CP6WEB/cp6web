@@ -63,12 +63,29 @@ export default function Carros() {
       return 0
     })
 
+  const hoje = new Date().toLocaleDateString('en-CA')
+
   const enviarSolicitacao = (evento) => {
     evento.preventDefault()
+
+    if (
+      !veiculoSelecionado ||
+      !nome.trim() ||
+      !email.trim() ||
+      !dataRetirada ||
+      !dataDevolucao
+    ) {
+      return
+    }
+
+    if (dataRetirada < hoje || dataDevolucao <= dataRetirada) {
+      return
+    }
+
+    setNome(nome.trim())
+    setEmail(email.trim())
     setSolicitacaoEnviada(true)
   }
-
-  const hoje = new Date().toLocaleDateString('en-CA')
 
   return (
     <main className="min-h-screen bg-zinc-950 px-5 py-16 lg:px-8">
@@ -208,6 +225,7 @@ export default function Carros() {
           <section className="mt-10 rounded-2xl border border-white/10 bg-zinc-900 p-6 sm:p-8">
             <div className="flex items-center gap-3">
               <CalendarDays className="text-amber-400" size={22} />
+
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">
                   Solicitação de interesse
