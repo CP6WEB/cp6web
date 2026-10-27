@@ -1,5 +1,6 @@
+
 import { useState } from 'react'
-import { SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal } from 'lucide-react'
 import Card from '../components/Card'
 import { carros } from '../data/carros'
 
@@ -56,10 +57,32 @@ export default function Carros() {
           </div>
         </div>
 
+        <div className="mt-6">
+          <label
+            htmlFor="busca-carros"
+            className="mb-2 block text-sm text-zinc-400"
+          >
+            Buscar por marca ou modelo
+          </label>
+
+          <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-zinc-900 px-4 transition focus-within:border-amber-400">
+            <Search size={18} className="shrink-0 text-amber-400" />
+
+            <input
+              id="busca-carros"
+              type="search"
+              placeholder="Ex.: Porsche, BMW, Ferrari..."
+              className="w-full bg-transparent py-3 text-sm text-white outline-none placeholder:text-zinc-500"
+            />
+          </div>
+        </div>
+
         <div className="mt-8 flex items-center justify-between">
           <p className="text-sm text-zinc-400">
             {carrosFiltrados.length}{' '}
-            {carrosFiltrados.length === 1 ? 'veículo encontrado' : 'veículos encontrados'}
+            {carrosFiltrados.length === 1
+              ? 'veículo encontrado'
+              : 'veículos encontrados'}
           </p>
 
           <p className="text-xs text-zinc-500">
