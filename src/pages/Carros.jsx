@@ -10,6 +10,7 @@ export default function Carros() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todos')
   const [termoBusca, setTermoBusca] = useState('')
   const [ordenacao, setOrdenacao] = useState('padrao')
+  const [veiculoSelecionado, setVeiculoSelecionado] = useState(null)
 
   const limparFiltros = () => {
     setTermoBusca('')
@@ -161,7 +162,11 @@ export default function Carros() {
         {carrosFiltrados.length > 0 ? (
           <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {carrosFiltrados.map((carro) => (
-              <Card key={carro.id} carro={carro} />
+              <Card
+                key={carro.id}
+                carro={carro}
+                onDemonstrarInteresse={setVeiculoSelecionado}
+              />
             ))}
           </div>
         ) : (
@@ -176,6 +181,31 @@ export default function Carros() {
               className="rounded-full border border-amber-400 px-5 py-2 text-sm text-amber-400 transition hover:bg-amber-400 hover:text-zinc-950"
             >
               Limpar busca e filtros
+            </button>
+          </div>
+        )}
+
+        {veiculoSelecionado && (
+          <div className="mt-8 rounded-2xl border border-amber-400/30 bg-zinc-900 p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">
+              Seu veículo de interesse
+            </p>
+
+            <h2 className="mt-2 text-xl font-semibold text-white">
+              {veiculoSelecionado.marca} {veiculoSelecionado.modelo}
+            </h2>
+
+            <p className="mt-2 text-sm text-zinc-400">
+              Veículo selecionado. O formulário de solicitação será adicionado
+              na próxima etapa.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setVeiculoSelecionado(null)}
+              className="mt-4 rounded-full border border-white/20 px-4 py-2 text-sm text-white transition hover:border-amber-400"
+            >
+              Cancelar seleção
             </button>
           </div>
         )}
