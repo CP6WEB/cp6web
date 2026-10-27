@@ -16,7 +16,9 @@ export default function Carros() {
       carro.categoria === categoriaSelecionada
 
     const nomeCarro = `${carro.marca} ${carro.modelo}`.toLowerCase()
-    const correspondeBusca = nomeCarro.includes(termoBusca.trim().toLowerCase())
+    const correspondeBusca = nomeCarro.includes(
+      termoBusca.trim().toLowerCase(),
+    )
 
     return correspondeCategoria && correspondeBusca
   })
@@ -106,9 +108,22 @@ export default function Carros() {
             ))}
           </div>
         ) : (
-          <p className="mt-12 text-center text-zinc-400">
-            Nenhum veículo encontrado nesta categoria.
-          </p>
+          <div className="mt-12 flex flex-col items-center gap-4 text-center">
+            <p className="text-zinc-400">
+              Nenhum veículo corresponde à sua busca ou aos filtros selecionados.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => {
+                setTermoBusca('')
+                setCategoriaSelecionada('Todos')
+              }}
+              className="rounded-full border border-amber-400 px-5 py-2 text-sm text-amber-400 transition hover:bg-amber-400 hover:text-zinc-950"
+            >
+              Limpar busca e filtros
+            </button>
+          </div>
         )}
       </div>
     </main>
